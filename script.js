@@ -12,9 +12,13 @@ addBook.onclick = function () {
         btnDel.append("X");
         btnDel.style.color = "red";
         btnDel.style.marginLeft = "5px";
-        btnDel.addEventListener("click", function (e) {
-            const isbnn = e.target.parentElement.innerText.split(",")[0].substring(6);
-            library.splice(findBook(library, isbnn), 1);
+        // btnDel.addEventListener("click", function (e) {
+        //     const isbnn = e.target.parentElement.innerText.split(",")[0].substring(6);
+        //     library.splice(findBook(library, isbnn), 1);
+        //     e.target.parentElement.remove();
+        // });
+        btnDel.addEventListener("click", (e) => {
+            library.splice(findBook(library, book.isbn), 1);
             e.target.parentElement.remove();
         });
         li.append(book.toString(), btnDel);
