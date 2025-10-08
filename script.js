@@ -1,12 +1,12 @@
 const library = [];
 
 addBook.onclick = function () {
-    if (findBook(library, isbn.value.trim()) === -1 && isbn.value.trim() !== "") {
+    if (library.findIndex(b => b.isbn === isbn.value.trim()) === -1 && isbn.value.trim() !== "") {
         const book = new Book(isbn.value.trim(), title.value.trim(), author.value.trim(), year.value);
         library.push(book);
         const li = document.createElement("li");
         const btnDel = createButtonDel(() => {
-            library.splice(findBook(library, book.isbn), 1);
+            library.splice(library.findIndex(b => b.isbn === book.isbn), 1);
             statusb();
         });
         li.append(book.toString(), btnDel);
@@ -21,14 +21,6 @@ addBook.onclick = function () {
 
 }
 
-function findBook(library, isbn) {
-    for (let i = 0; i < library.length; i++) {
-        if (library[i].isbn === isbn) {
-            return i;
-        }
-    }
-    return -1;
-}
 
 function Book(isbn, title, author, year) {
     this.isbn = isbn;

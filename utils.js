@@ -1,10 +1,10 @@
 function createButtonDel(callback) {
-    const btnDel = document.createElement('button');
+    let btnDel = document.createElement('button');
     btnDel.append("X");
     btnDel.style.color = "red";
     btnDel.style.marginLeft = "5px";
-    btnDel.addEventListener("click", e => {
-        e.target.parentElement.remove();
+    btnDel.addEventListener("click", ({target}) => {
+        target.parentElement.remove();
         if (typeof callback === "function") {
             callback();
         }
@@ -13,30 +13,29 @@ function createButtonDel(callback) {
 }
 
 function statusb() {
-    if (library.length) {
-        if (stats.children.length === 1) {
-            const pMin = document.createElement("p");
-            pMin.id = "pMin";
-            const pMax = document.createElement("p");
-            pMax.id = "pMax";
-            const pAverage = document.createElement("p");
-            pAverage.id = "pAverage";
-            const pNumbers = document.createElement("p");
-            pNumbers.id = "pNumbers";
-            stats.append(pMin, pMax, pAverage, pNumbers);
-        }
-        pMin.innerHTML = `Min year of publishing: ${library.map(b => b.year).reduce((min, b) => b < min ? b : min)}`;
-        pMax.innerHTML = `Max year of publishing: ${library.map(b => b.year).reduce((max, b) => b > max ? b : max)}`;
-        pAverage.innerHTML = `Average year of publishing: ${Math.round(library.reduce((acc, b) => acc + b.year, 0) / library.length)}`;
-        pNumbers.innerHTML = `Number of books: ${library.length}`;
+    const divStatus = document.createElement("div");
 
-    } else {
-        pMin.innerHTML = `Min year of publishing: 0`;
-        pMax.innerHTML = `Max year of publishing: 0`;
-        pAverage.innerHTML = `Average year of publishing: 0`;
-        pNumbers.innerHTML = `Number of books: ${library.length}`;
-
+    try {
+        const pMin = createInfoElement(`Min year of publishing: ${library
+            .reduce((min, b) => b.year < min ? b.year : min,library[0].year)}`, 'p');
+        const pMax = createInfoElement(`Max year of publishing: ${library
+            .reduce((max, b) => b.year > max ? b.year : max,library[0].year)}`, 'p');
+        const pAverage = createInfoElement(`Average year of publishing:
+         ${Math.round(library.reduce((acc, b) => acc + b.year, 0) / library.length)}`, 'p');
+        const pNumbers = createInfoElement(`Number of books: ${library.length}`, 'p');
+        divStatus.append(pMin, pMax, pAverage, pNumbers);
+    } catch ({message}) {
+        console.log(message);
     }
+    if (stats.children.length === 1) {
+        stats.append(divStatus);
+    } else {
+        stats.replaceChild(divStatus, stats.firstElementChild.nextElementSibling);
+    }
+}
 
-
+function createInfoElement(content, tag) {
+    const element = document.createElement(tag);
+    element.append(content);
+    return element;
 }
